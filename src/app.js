@@ -11,8 +11,13 @@ app.use(express.json());
 
 app.post("/tweets", (req, res) => {
     const tweet = req.body;
-    tweets.push(tweet);
-    res.send(tweet)
+    if (!users.includes(tweet.username)) {
+        res.send("UNAUTHORIZED")
+    } else {
+        tweets.push(tweet);
+        res.send(tweet)
+    }
+
 })
 
 app.post("/sign-up", (req, res) => {
@@ -23,10 +28,10 @@ app.post("/sign-up", (req, res) => {
 
 function getTweets() {
     userTweets = []
-    const targetTweets = tweets.slice(0).slice(-10) 
+    const targetTweets = tweets.slice(0).slice(-10)
     targetTweets.map((tweet) => {
         const user = users.find((user) => user.username === tweet.username);
-        userTweets.unshift({ ...tweet, avatar: user.avatar });     
+        userTweets.unshift({ ...tweet, avatar: user.avatar });
     })
 }
 
