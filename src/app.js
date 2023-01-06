@@ -9,22 +9,22 @@ let userTweets = [];
 app.use(cors());
 app.use(express.json());
 
-app.post("/tweets", (req, res) => {
-    const tweet = req.body;
-    if (!users.includes(tweet.username)) {
-        res.send("UNAUTHORIZED")
-    } else {
-        tweets.push(tweet);
-        res.send(tweet)
-    }
-
-})
-
 app.post("/sign-up", (req, res) => {
     const user = req.body;
     users.push(user);
-    res.send(user)
+    res.status(200).send("OK")
 })
+
+app.post("/tweets", (req, res) => {
+    const tweet = req.body;
+    const findUser = users.find((user) => user.username === tweet.username);
+    
+    !findUser ?
+    res.status(401).send("UNAUTHORIZED") :
+    tweets.push(tweet)
+    res.status(201).send("CREATED")
+})
+
 
 function getTweets() {
     userTweets = []
