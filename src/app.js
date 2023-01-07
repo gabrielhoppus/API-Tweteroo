@@ -48,8 +48,12 @@ app.get("/tweets", (req, res) => {
     res.send(userTweets);
 })
 
-
-
+app.get("/tweets/:username", (req, res) => {
+    const username = req.params.username
+    getTweets()
+    const usernameTweets = tweets.filter((tweet) => tweet.username === username)
+    res.send(usernameTweets);
+})
 
 
 app.listen(PORT);
