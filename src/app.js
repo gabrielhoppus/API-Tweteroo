@@ -12,7 +12,7 @@ app.use(express.json());
 app.post("/sign-up", (req, res) => {
     const user = req.body;
 
-    if (!user.username || !user.avatar) {
+    if (!user.username || !user.avatar || typeof user.username !== 'string' || typeof user.avatar !== 'string') {
         res.status(400).send("Todos os campos são obrigatórios!")
     }
     users.push(user);
@@ -23,7 +23,7 @@ app.post("/tweets", (req, res) => {
     const tweet = req.body;
     const findUser = users.find((user) => user.username === tweet.username);
 
-    if (!tweet.username || !tweet.tweet) {
+    if (!tweet.username || !tweet.tweet || typeof tweet.tweet !== 'string') {
         res.status(400).send("Todos os campos são obrigatórios!")
     }
 
