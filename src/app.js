@@ -50,7 +50,7 @@ app.get("/tweets", (req, res) => {
         const maxSlice = page * 10;
         targetTweets = reversedTweets.slice(minSlice, maxSlice);
     } else {
-        targetTweets = reversedTweets.slice(0, 10);
+        targetTweets = reversedTweets.slice(-10);
     }
 
     targetTweets.map((tweet) => {
