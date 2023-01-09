@@ -5,6 +5,7 @@ const app = express();
 const PORT = 5000;
 const users = [];
 const tweets = [];
+let userTweets = [];
 app.use(cors());
 app.use(express.json());
 
@@ -12,68 +13,45 @@ app.post("/sign-up", (req, res) => {
     const user = req.body;
 
     if (!user.username || !user.avatar || typeof user.username !== 'string' || typeof user.avatar !== 'string') {
-        res.status(400).send("Todos os campos são obrigatórios!");
+        res.status(400).send("Todos os campos são obrigatórios!")
     }
     users.push(user);
-    res.status(201).send("OK");
+    res.status(201).send("OK")
 })
 
 app.post("/tweets", (req, res) => {
-    const username = req.headers.user;
-    const text = req.body.tweet;
-    const findUser = users.find((user) => user.username === username);
+    const tweet = req.body;
+    const findUser = users.find((user) => user.username === tweet.username);
 
-    if (!username || !text || typeof text !== 'string') {
-        res.status(400).send("Todos os campos são obrigatórios!");
+    if (!tweet.username || !tweet.tweet || typeof tweet.tweet !== 'string') {
+        res.status(400).send("Todos os campos são obrigatórios!")
     }
-    const tweet = { username, tweet: text };
-    if (!findUser) {
-        res.status(401).send("UNAUTHORIZED")
-    }
-    tweets.push(tweet)
+
+    !findUser ?
+        res.status(401).send("UNAUTHORIZED") :
+        tweets.push(tweet)
     res.status(201).send("CREATED")
 })
 
-app.get("/tweets", (req, res) => {
-    let targetTweets = [];
-    let userTweets = [];
-    let page = 1;
-    const username = req.headers.user;
-    const reversedTweets = [...tweets].reverse();
 
-    if (req.query.page){
-        page = req.query.page;
-    }
-
-    if (page < 1) {
-        res.status(400).send("Informe uma página válida!");
-        return;
-    }
-    const minSlice = (page - 1) * 10;
-    const maxSlice = page * 10;
-    
-    if (reversedTweets.lenght < 10){
-        targetTweets = reversedTweets.slice(0).slice(-10);
-    }else{
-        targetTweets = reversedTweets.slice(minSlice, maxSlice);
-    }
-    
-
-
-
-
+function getTweets() {
+    userTweets = []
+    const targetTweets = tweets.slice(0).slice(-10)
     targetTweets.map((tweet) => {
-        const user = users.find((user) => user.username === username);
-        userTweets.push({ ...tweet, avatar: user.avatar });
+        const user = users.find((user) => user.username === tweet.username);
+        userTweets.unshift({ ...tweet, avatar: user.avatar });
     })
+}
 
-    res.status(200).send(userTweets.slice(-10));
+app.get("/tweets", (req, res) => {
+    getTweets()
+    res.send(userTweets);
 })
 
 app.get("/tweets/:username", (req, res) => {
-    const username = req.params.username;
-    const reversedTweets = [...tweets].reverse();
-    const usernameTweets = reversedTweets.filter((tweet) => tweet.username === username);
+    const username = req.params.username
+    getTweets()
+    const usernameTweets = tweets.filter((tweet) => tweet.username === username)
     res.send(usernameTweets);
 })
 
