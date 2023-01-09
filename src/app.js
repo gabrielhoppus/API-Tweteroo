@@ -23,7 +23,7 @@ app.post("/tweets", (req, res) => {
     const text = req.body.tweet;
     const findUser = users.find((user) => user.username === username);
 
-    if (!tweet.tweet || typeof tweet.tweet !== 'string') {
+    if (!username || !text || typeof text !== 'string') {
         res.status(400).send("Todos os campos são obrigatórios!");
     }
     const tweet = { username, tweet: text };
