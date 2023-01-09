@@ -51,7 +51,12 @@ app.get("/tweets", (req, res) => {
     }
     const minSlice = (page - 1) * 10;
     const maxSlice = page * 10;
-    targetTweets = reversedTweets.slice(minSlice, maxSlice);
+    if (tweets.length < 10){
+        targetTweets = reversedTweets.slice(0, tweets.length);
+    }else{
+        targetTweets = reversedTweets.slice(minSlice, maxSlice);
+    }
+    
 
 
 
