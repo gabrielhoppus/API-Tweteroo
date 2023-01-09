@@ -41,8 +41,8 @@ app.get("/tweets", (req, res) => {
     const username = req.headers.user;
     const reversedTweets = [...tweets].reverse();
 
-    if (req.query.page) {
-        page = req.query.page
+    if (req.query.page){
+        page = req.query.page;
     }
 
     if (page < 1) {
@@ -51,12 +51,7 @@ app.get("/tweets", (req, res) => {
     }
     const minSlice = (page - 1) * 10;
     const maxSlice = page * 10;
-    if (tweets.length < 10){
-        targetTweets = reversedTweets.slice(0, tweets.length);
-    }else{
-        targetTweets = reversedTweets.slice(minSlice, maxSlice);
-    }
-    
+    targetTweets = reversedTweets.slice(minSlice, maxSlice);
 
 
 
@@ -66,7 +61,7 @@ app.get("/tweets", (req, res) => {
         userTweets.push({ ...tweet, avatar: user.avatar });
     })
 
-    res.status(200).send(userTweets);
+    res.status(200).send(userTweets.slice(-10));
 })
 
 app.get("/tweets/:username", (req, res) => {
