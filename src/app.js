@@ -36,8 +36,9 @@ app.post("/tweets", (req, res) => {
 
 app.get("/tweets", (req, res) => {
     let targetTweets = [];
+    let userTweets =[];
     const { page } = req.query;
-    const username = req.headers.username;
+    const username = req.headers.user;
     const reversedTweets = [...tweets].reverse();
 
     if (req.query.page) {
@@ -54,7 +55,7 @@ app.get("/tweets", (req, res) => {
 
     targetTweets.map((tweet) => {
         const user = users.find((user) => user.username === username);
-        userTweets.push({ ...tweet, avatar: user.avatar });
+        userTweets.push({ ...tweet, avatar: user.avatar});
     })
 
     res.send(userTweets);
