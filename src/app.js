@@ -58,7 +58,7 @@ app.get("/tweets", (req, res) => {
         userTweets.push({ ...tweet, avatar: user.avatar});
     })
 
-    res.send(userTweets);
+    res.status(200).send(userTweets);
 })
 
 app.get("/tweets/:username", (req, res) => {
