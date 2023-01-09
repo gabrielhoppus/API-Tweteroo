@@ -36,26 +36,29 @@ app.post("/tweets", (req, res) => {
 
 app.get("/tweets", (req, res) => {
     let targetTweets = [];
-    let userTweets =[];
-    const { page } = req.query;
+    let userTweets = [];
+    let page = 1;
     const username = req.headers.user;
     const reversedTweets = [...tweets].reverse();
 
     if (req.query.page) {
-        if (page < 1) {
-            res.status(400).send("Informe uma página válida!");
-            return;
-        }
-        const minSlice = (page - 1) * 10;
-        const maxSlice = page * 10;
-        targetTweets = reversedTweets.slice(minSlice, maxSlice);
-    } else {
-        targetTweets = reversedTweets.slice(-10);
+        page = req.query.page
     }
+
+    if (page < 1) {
+        res.status(400).send("Informe uma página válida!");
+        return;
+    }
+    const minSlice = (page - 1) * 10;
+    const maxSlice = page * 10;
+    targetTweets = reversedTweets.slice(minSlice, maxSlice);
+
+
+
 
     targetTweets.map((tweet) => {
         const user = users.find((user) => user.username === username);
-        userTweets.push({ ...tweet, avatar: user.avatar});
+        userTweets.push({ ...tweet, avatar: user.avatar });
     })
 
     res.status(200).send(userTweets);
